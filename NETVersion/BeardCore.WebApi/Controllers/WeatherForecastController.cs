@@ -1,9 +1,10 @@
+using BeardCore.Mail;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeardCore.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -28,6 +29,14 @@ namespace BeardCore.WebApi.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> TestSendEmail()
+        {
+           var res  = await MailHelper.Send();
+           return Ok(res);
         }
     }
 }

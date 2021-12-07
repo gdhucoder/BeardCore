@@ -36,6 +36,7 @@ namespace BeardCore.WebApi.Controllers
         public async Task<IActionResult> TestSendEmail()
         {
            var res  = await MailHelper.Send();
+            Console.WriteLine("hello");
            return Ok(res);
         }
     }

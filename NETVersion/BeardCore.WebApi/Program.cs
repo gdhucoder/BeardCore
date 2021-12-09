@@ -1,3 +1,5 @@
+// Copyright (c) HuGuodong 2022. All Rights Reserved.
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

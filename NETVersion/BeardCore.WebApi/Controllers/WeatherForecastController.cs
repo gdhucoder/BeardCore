@@ -1,3 +1,5 @@
+// Copyright (c) HuGuodong 2022. All Rights Reserved.
+
 using BeardCore.Mail;
 using Microsoft.AspNetCore.Mvc;
 

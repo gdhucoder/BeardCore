@@ -303,3 +303,4 @@ paket-files/
 __pycache__/
 *.pyc
 *.dll
+settings.*

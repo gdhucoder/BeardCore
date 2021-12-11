@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove=".editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EditorConfigFiles Include=".editorconfig" />
+    <PackageReference Include="log4net" Version="2.0.13" />
   </ItemGroup>
 
 </Project>

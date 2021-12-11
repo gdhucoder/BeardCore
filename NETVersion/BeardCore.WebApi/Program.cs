@@ -1,6 +1,12 @@
+﻿using BeardCore.Commons.Log;
+using log4net;
+using log4net.Repository;
 // Copyright (c) HuGuodong 2022. All Rights Reserved.
 
 var builder = WebApplication.CreateBuilder(args);
+
+ILoggerRepository LoggerRepository = LogManager.CreateRepository("NETCoreRepository");
+Log4netHelper.SetConfig(LoggerRepository, "log4net.config");
 
 // Add services to the container.
 

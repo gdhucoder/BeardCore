@@ -1,5 +1,6 @@
-// Copyright (c) HuGuodong 2022. All Rights Reserved.
+﻿// Copyright (c) HuGuodong 2022. All Rights Reserved.
 
+using BeardCore.Commons.Log;
 using BeardCore.Mail;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,14 @@ namespace BeardCore.WebApi.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+            try
+            {
+               throw new NotImplementedException("错误");
+            }
+            catch (Exception ex)    
+            {
+                Log4netHelper.Error("根据父级功能编码查询所有子集功能，主要用于页面操作按钮权限,代码生成异常", ex);
+            }
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),

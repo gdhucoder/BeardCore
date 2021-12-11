@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BeardCore.Commons\BeardCore.Commons.csproj" />
     <ProjectReference Include="..\BeardCore.Mail\BeardCore.Mail.csproj" />
   </ItemGroup>
 

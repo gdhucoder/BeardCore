@@ -24,6 +24,6 @@ class Job(models.Model):
     job_requirement = models.TextField(max_length=1024, verbose_name="工作要求")
     # auth.models 中的 user
     creator = models.ForeignKey(User, verbose_name="创建人", null=True, on_delete=models.SET_NULL)
-    # 默认值
+    # 默认值（当前时间）
     created_date = models.DateTimeField(verbose_name="创建时间", default=datetime.now)
     modified_date = models.DateTimeField(verbose_name="修改时间", default=datetime.now)

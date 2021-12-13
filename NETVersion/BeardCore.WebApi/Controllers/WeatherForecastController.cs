@@ -32,9 +32,13 @@ namespace BeardCore.WebApi.Controllers
                 
                 throw new NotImplementedException("错误");
             }
-            catch (Exception ex)    
+            catch (NotImplementedException ex)    
             {
-                _logger.LogError("根据父级功能编码查询所有子集功能，主要用于页面操作按钮权限,代码生成异常", ex);
+                _logger.LogError(ex, "cuowu");
+                _logger.LogWarning(ex, "警告1");
+                _logger.LogWarning("警告2");
+                _logger.LogInformation("消息");
+                _logger.LogDebug("调试");
                 // Log4netHelper.Error("根据父级功能编码查询所有子集功能，主要用于页面操作按钮权限,代码生成异常", ex);
             }
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

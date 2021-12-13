@@ -1,7 +1,7 @@
-﻿using BeardCore.Commons.Log;
+﻿// Copyright (c) HuGuodong 2022. All Rights Reserved.
+using BeardCore.Commons.Log;
 using log4net;
 using log4net.Repository;
-// Copyright (c) HuGuodong 2022. All Rights Reserved.
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddLog4Net("log4net.config");

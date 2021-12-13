@@ -59,3 +59,34 @@ def monthly_summary():
     month_cur_day = ''
     month_qry_times = ''
     total_times = ''
+
+def sub_statics(request):
+    result = '预警服务银行机构订阅情况：<br>'
+    sub_stat_sql = '''SELECT
+            u.CLIENT_NAME AS 'client_name',
+            count( 1 ) AS 'sub_ent_cnt' 
+        FROM
+            UserDB.`USER_USER_ALERT_SUB` sub
+            LEFT JOIN UserDB.USER_USER_ALERT_CLIENT u ON u.CLIENT_ID = sub.CLIENT_ID 
+        WHERE
+            sub.CLIENT_ID IN ( '893afe5a78be4fe28cc69d520e77f7d8', '43b54e65c06849afb33ee00fb7ba87ac' ) 
+            and sub.IS_SUB = '1'
+        GROUP BY
+            sub.CLIENT_ID
+        ORDER BY 	u.CLIENT_NAME
+        '''
+    alert_push_stat_sql = '''SELECT u.CLIENT_NAME as 'client_name', SUM(PUSH_TARGET_COUNT) as 'alert_times'FROM `ENTERPRISE_INFO_PUSH_SUMMARY` s
+                        LEFT JOIN UserDB.USER_USER_ALERT_CLIENT u on u.CLIENT_ID = s.CLIENT_ID
+                        where s.CLIENT_ID IN ( '893afe5a78be4fe28cc69d520e77f7d8', '43b54e65c06849afb33ee00fb7ba87ac' ) 
+                        GROUP BY s.CLIENT_ID ORDER BY u.CLIENT_NAME'''
+    with connections['szcreditmysqldb'].cursor() as c:
+        c.execute(sub_stat_sql)
+        sub_clt_summary = dictfetchall(c)
+        for clt in sub_clt_summary:
+            result += '【{}】 订阅企业【 {}】 家 。<br>'.format(clt['client_name'], clt['sub_ent_cnt'])
+        result += '为机构提供信用风险预警：<br>'
+        c.execute(alert_push_stat_sql)
+        alert_push_clt_summary = dictfetchall(c)
+        for clt in alert_push_clt_summary:
+            result += '【{}】 提供信用风险预警：【{}】次 。<br>'.format(clt['client_name'], clt['alert_times'])
+    return HttpResponse(result)

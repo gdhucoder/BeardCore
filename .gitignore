@@ -304,4 +304,5 @@ __pycache__/
 *.pyc
 *.dll
 # May have DB secrests
+**/szinterface/alert/
 settings.*

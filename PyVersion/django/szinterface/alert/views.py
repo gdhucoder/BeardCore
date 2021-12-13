@@ -62,6 +62,7 @@ def monthly_summary():
 
 def sub_statics(request):
     result = '预警服务银行机构订阅情况：<br>'
+    # 银行订阅企业情况
     sub_stat_sql = '''SELECT
             u.CLIENT_NAME AS 'client_name',
             count( 1 ) AS 'sub_ent_cnt' 
@@ -75,6 +76,7 @@ def sub_statics(request):
             sub.CLIENT_ID
         ORDER BY 	u.CLIENT_NAME
         '''
+    # 预警信息推送
     alert_push_stat_sql = '''SELECT u.CLIENT_NAME as 'client_name', SUM(PUSH_TARGET_COUNT) as 'alert_times'FROM `ENTERPRISE_INFO_PUSH_SUMMARY` s
                         LEFT JOIN UserDB.USER_USER_ALERT_CLIENT u on u.CLIENT_ID = s.CLIENT_ID
                         where s.CLIENT_ID IN ( '893afe5a78be4fe28cc69d520e77f7d8', '43b54e65c06849afb33ee00fb7ba87ac' ) 

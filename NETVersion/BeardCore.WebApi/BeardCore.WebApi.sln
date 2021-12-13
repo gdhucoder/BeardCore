@@ -3,17 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeardCore.WebApi", "BeardCore.WebApi.csproj", "{22A5D55E-6F93-41EF-95B1-B73999E806B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeardCore.WebApi", "BeardCore.WebApi.csproj", "{22A5D55E-6F93-41EF-95B1-B73999E806B7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{20792969-37B4-4FE2-920C-DBB8F45798E3} = {20792969-37B4-4FE2-920C-DBB8F45798E3}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeardCore.Mail", "..\BeardCore.Mail\BeardCore.Mail.csproj", "{60072060-409A-46E9-B373-C517902CA618}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeardCore.Mail", "..\BeardCore.Mail\BeardCore.Mail.csproj", "{60072060-409A-46E9-B373-C517902CA618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeardCore.Quartz.Jobs", "..\BeardCore.Quartz.Jobs\BeardCore.Quartz.Jobs.csproj", "{AAC06D48-DB08-4C41-9EF4-B689704F4F09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeardCore.Quartz.Jobs", "..\BeardCore.Quartz.Jobs\BeardCore.Quartz.Jobs.csproj", "{AAC06D48-DB08-4C41-9EF4-B689704F4F09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeardCore.SMS", "..\BeardCore.SMS\BeardCore.SMS.csproj", "{0AFEDFDB-8F62-4A0A-9F48-1CA5F81BDB65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeardCore.SMS", "..\BeardCore.SMS\BeardCore.SMS.csproj", "{0AFEDFDB-8F62-4A0A-9F48-1CA5F81BDB65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeardCore.Commons", "..\BeardCore.Commons\BeardCore.Commons.csproj", "{20792969-37B4-4FE2-920C-DBB8F45798E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeardCore.Commons", "..\BeardCore.Commons\BeardCore.Commons.csproj", "{20792969-37B4-4FE2-920C-DBB8F45798E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeardCore.WeChat", "..\BeardCore.WeChat\BeardCore.WeChat.csproj", "{4B728485-4A4B-486B-9AC3-F9AA27B3A9CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeardCore.WeChat", "..\BeardCore.WeChat\BeardCore.WeChat.csproj", "{4B728485-4A4B-486B-9AC3-F9AA27B3A9CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

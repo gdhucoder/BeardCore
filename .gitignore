@@ -303,4 +303,5 @@ paket-files/
 __pycache__/
 *.pyc
 *.dll
+# May have DB secrests
 settings.*

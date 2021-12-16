@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.13" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.0.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.0.4.7" />
   </ItemGroup>
 
 </Project>

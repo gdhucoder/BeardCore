@@ -13,7 +13,13 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
     ]
 
+
 def index(request):
+    result = weekly_summary() + monthly_summary()
+    return HttpResponse(result)
+
+
+def weekly_summary():
     result = ''
     with connections['szcreditmysqldb'].cursor() as c:
         c.execute('''SELECT
@@ -22,12 +28,12 @@ def index(request):
         FROM
             DUAL''')
         inverval = dictfetchall(c)[0]
-        first_line = '统计区间：{0}-{1}'.format(inverval['begin'], inverval['end'])+'<br>'
+        first_line = '周统计：<br>统计区间：{0}-{1}'.format(inverval['begin'], inverval['end'])+'<br>'
         c.execute(
             '''select count(1) as total_times from EnterpriseInfoAlterDB.ENTERPRISE_INFO_QRY_REQ WHERE CREATE_DATE > STR_TO_DATE('2021-01-01','%Y-%m-%d')''')
         summary = dictfetchall(c)
         print(summary)
-        result += '，今年累计'+str(summary[0]['total_times'])+'次，其中为'
+        result += '，今年累计'+str(summary[0]['total_times'])+'次，其中'
         c.execute('''SELECT
                     q.CLIENT_ID 'clientID',
                     u.CLIENT_NAME_CN 'clientNameCn',
@@ -49,16 +55,59 @@ def index(request):
         head = '上周新版数据接口产品为各合作机构服务{}次'.format(sum)
         result = result[:-1]
         result = first_line + head + result + '。'
-    return HttpResponse(result)
+        result += "<br><br><br>"
+        return result
 
 def monthly_summary():
-    template = '''新版数据接口月度统计（9月），统计区间9.1-28  <br>
-                9月新版数据接口产品为各合作机构服务4306次，今年累计5485次，其中深圳农村商业银行服务612次，交通银行深圳分行3694次。'''
-    month = ''
-    month_first_day = ''
-    month_cur_day = ''
-    month_qry_times = ''
-    total_times = ''
+
+    template = '''新版数据接口月度统计（{0}月），统计区间1日--{2}日  <br>
+                {0}月新版数据接口产品为各合作机构服务{3}次，今年累计{4}次，其中'''
+    month_date_sql = '''
+                SELECT
+                DATE_FORMAT(DATE_ADD( curdate(), INTERVAL - DAY ( curdate() ) + 1 DAY ), '%d') AS 'month_first_day',
+                DATE_FORMAT(last_day(curdate()), '%d') as 'month_last_day',
+                DATE_FORMAT(curdate(), '%d') as 'month_cur_day',
+                DATE_FORMAT(curdate(),'%m') as 'cur_month'
+                '''
+    yearly_sum_sql = '''
+                select count(1) as 'total_times' from EnterpriseInfoAlterDB.ENTERPRISE_INFO_QRY_REQ WHERE CREATE_DATE > STR_TO_DATE('2021-01-01','%Y-%m-%d')
+                '''
+    month_stat_sql = '''
+                    SELECT
+                    q.CLIENT_ID 'clientID',
+                    u.CLIENT_NAME_CN 'clientNameCn',
+                    count( 1 ) 'qryTime' 
+                FROM
+                    EnterpriseInfoAlterDB.ENTERPRISE_INFO_QRY_REQ q
+                    LEFT JOIN UserDB.USER_USER_ALERT_CLIENT u ON u.CLIENT_ID = q.CLIENT_ID 
+                WHERE
+                    q.CREATE_DATE >= DATE_ADD( curdate( ), INTERVAL - DAY ( curdate( ) ) + 1 DAY ) 
+                    AND q.CLIENT_ID IN ( '893afe5a78be4fe28cc69d520e77f7d8', '43b54e65c06849afb33ee00fb7ba87ac' ) 
+                GROUP BY
+                    q.CLIENT_ID 
+                ORDER BY
+                    count( 1 ) DESC'''
+    with connections['szcreditmysqldb'].cursor() as c:
+        c.execute(month_date_sql)
+        month_date = dictfetchall(c)[0]
+        month_first_day = month_date['month_first_day']
+        month_last_day = month_date['month_last_day']
+        month_cur_day = month_date['month_cur_day']
+        cur_month = month_date['cur_month']
+
+        c.execute(yearly_sum_sql)
+        total_times = dictfetchall(c)[0]['total_times']
+
+        c.execute(month_stat_sql)
+        month_stat = dictfetchall(c)
+        month_total_times = 0
+        for clt in month_stat:
+            template += clt['clientNameCn'] + str(clt['qryTime']) + "次，"
+            month_total_times += clt['qryTime']
+        template = template[:-1] + "。"
+        template = template.format(cur_month, month_first_day, month_cur_day, month_total_times, total_times)
+
+    return template
 
 def sub_statics(request):
     result = '预警服务银行机构订阅情况：<br>'

@@ -60,7 +60,7 @@ def weekly_summary():
 
 def monthly_summary():
 
-    template = '''新版数据接口月度统计（{0}月），统计区间1日--{2}日  <br>
+    template = '''月度统计：<br>新版数据接口月度统计（{0}月），统计区间：1日--{2}日  <br>
                 {0}月新版数据接口产品为各合作机构服务{3}次，今年累计{4}次，其中'''
     month_date_sql = '''
                 SELECT

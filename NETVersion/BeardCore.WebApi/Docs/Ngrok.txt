@@ -1,0 +1,5 @@
+﻿./ngrok.exe http 5015
+
+look for external ip
+
+https://dashboard.ngrok.com/endpoints/status

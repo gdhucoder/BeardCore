@@ -4,6 +4,7 @@ using BeardCore.Commons.Log;
 using BeardCore.Mail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using BeardCore.Commons.Extensions.Cache;
 
 namespace BeardCore.WebApi.Controllers
 {
@@ -66,19 +67,14 @@ namespace BeardCore.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> MemoryCache()
         {
-            var time = DateTime.Now;
-            if(!_memoryCache.TryGetValue("Time", out DateTime cacheValue))
+            
+            var time =  _memoryCache.GetRecord<DateTime>("time");
+            if (time == null)
             {
-                cacheValue = time;
-                var opt = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(3));
-                _memoryCache.Set("Time", cacheValue, opt);
-                _logger.LogInformation("Set Cache");
+                time = DateTime.Now;
+                _memoryCache.SetRecord<DateTime>("time", time, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(3));
             }
-            else
-            {
-                _logger.LogInformation("Hit Cache");
-            }
-            time = cacheValue;
+
             return Ok(time);
         }
     }

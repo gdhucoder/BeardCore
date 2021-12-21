@@ -68,11 +68,11 @@ namespace BeardCore.WebApi.Controllers
         public async Task<IActionResult> MemoryCache()
         {
             
-            var time =  _memoryCache.GetRecord<DateTime>("time");
+            var time =  _memoryCache.GetRecord<string>("time");
             if (time == null)
             {
-                time = DateTime.Now;
-                _memoryCache.SetRecord<DateTime>("time", time, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(3));
+                time = "缓存xxx";
+                _memoryCache.SetRecord<string>("time", time, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(3));
             }
 
             return Ok(time);

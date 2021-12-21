@@ -306,3 +306,4 @@ __pycache__/
 # May have DB secrests
 **/szinterface/alert/
 settings.*
+/NETVersion/BeardCore.Commons/Repository/Repository.cs

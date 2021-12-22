@@ -33,6 +33,14 @@ foreach (var p in ps)
     Console.WriteLine(p.name);
 }
 
+personService.Update(new Person() { personId = 19, name = "胡国栋2", sex = "F"});
+
+var modifiedPerson = personService.GetById(19);
+
+Console.WriteLine(modifiedPerson.name);
+var delRes = personService.DeleteById(19);
+Console.WriteLine("是否删除成功？ {0}", delRes);
+
 Console.WriteLine("total: {0}", total);
 
 Console.WriteLine("执行完成");

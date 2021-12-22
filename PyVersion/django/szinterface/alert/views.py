@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db import connections
-
-
+import requests
+import json
+import re
 # Create your views here.
 
 def dictfetchall(cursor):
@@ -56,12 +57,12 @@ def weekly_summary():
         result = result[:-1]
         result = first_line + head + result + '。'
         result += "<br><br><br>"
+        send_feishu(result.replace('<br>','\n'))
         return result
 
 def monthly_summary():
 
-    template = '''月度统计：<br>新版数据接口月度统计（{0}月），统计区间：1日--{2}日  <br>
-                {0}月新版数据接口产品为各合作机构服务{3}次，今年累计{4}次，其中'''
+    template = '''月度统计：<br>新版数据接口月度统计（{0}月），统计区间：1日--{2}日<br>{0}月新版数据接口产品为各合作机构服务{3}次，今年累计{4}次，其中'''
     month_date_sql = '''
                 SELECT
                 DATE_FORMAT(DATE_ADD( curdate(), INTERVAL - DAY ( curdate() ) + 1 DAY ), '%d') AS 'month_first_day',
@@ -106,7 +107,9 @@ def monthly_summary():
             month_total_times += clt['qryTime']
         template = template[:-1] + "。"
         template = template.format(cur_month, month_first_day, month_cur_day, month_total_times, total_times)
-
+    feishu_txt = re.sub(r'(<br>)+', '\n', template)
+    print(feishu_txt)
+    send_feishu(feishu_txt)
     return template
 
 def sub_statics(request):
@@ -141,3 +144,20 @@ def sub_statics(request):
         for clt in alert_push_clt_summary:
             result += '【{}】 提供信用风险预警：【{}】次 。<br>'.format(clt['client_name'], clt['alert_times'])
     return HttpResponse(result)
+
+
+def send_feishu(msg):
+    url = "https://open.feishu.cn/open-apis/bot/v2/hook/6590bb3f-f3ac-472c-be7d-e5754460f023"
+    playload_message = {
+        "msg_type" : "text",
+         "content" : {
+             "text":  msg
+         }
+    }
+
+    headers = {
+        'Content-Type': "application/json"
+    }
+
+    response = requests.request("POST", url, headers= headers, data=json.dumps(playload_message))
+    print(response.text)

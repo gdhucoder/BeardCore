@@ -6,7 +6,10 @@ using SqlSugar;
 IFreeSql freeSql = new FreeSql.FreeSqlBuilder()
     .UseConnectionString(FreeSql.DataType.Dameng, @"")
     .Build();
-
+freeSql.Aop.CurdAfter += (s, e) =>
+{
+    Console.WriteLine($"{e.EntityType.FullName}{e.Sql}");
+};
 PersonService personService = new PersonService();
 var hgd = new Person()
 {
@@ -56,7 +59,7 @@ Console.WriteLine("执行完成");
 
 Console.WriteLine("执行DM FreeSQL=======================");
 
-var ents = freeSql.Select<BizBaseInfo>().ToList();
+var ents = freeSql.Select<BizBaseInfo>().Where(a=>a.ID == "0000175D173945DAAAF87675E3D35661").ToList();
 
 foreach (var e in ents)
 {

@@ -4,7 +4,7 @@ using BeardCore.Service.Service;
 using SqlSugar;
 
 IFreeSql freeSql = new FreeSql.FreeSqlBuilder()
-    .UseConnectionString(FreeSql.DataType.Dameng, @"Server=10.3.88.113;PORT=5239;User id=SYSDBA;PWD=123456789")
+    .UseConnectionString(FreeSql.DataType.Dameng, @"")
     .Build();
 
 PersonService personService = new PersonService();

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using FreeSql.DataAnnotations;
 
 namespace BeardCore.Service.Service
 {
@@ -72,5 +73,16 @@ namespace BeardCore.Service.Service
         public int accountId { get; set; }
 
         public decimal bal { get; set; }
+    }
+
+    [SugarTable("\"EnterpriseDB\".BIZ_BASE_INFO")]
+    [Table(Name = "EnterpriseDB.BIZ_BASE_INFO")]
+    public class BizBaseInfo
+    {
+        [Column(IsPrimary = true)]
+        public string ID { get; set; }
+        public string Mc { get; set; }
+
+        public DateTime? LASTDATE { get; set; }
     }
 }

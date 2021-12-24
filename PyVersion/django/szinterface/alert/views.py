@@ -143,6 +143,25 @@ def sub_statics(request):
         alert_push_clt_summary = dictfetchall(c)
         for clt in alert_push_clt_summary:
             result += '【{}】 提供信用风险预警：【{}】次 。<br>'.format(clt['client_name'], clt['alert_times'])
+
+    credit_report_stat = '信用报告查询情况：<br>'
+    credit_report_stat_sql = '''SELECT
+                                u.CLIENT_NAME 'client_name',
+                              count( 1 ) as 'qry_times'
+                            FROM
+                                `ENTERPRISE_INFO_QRY_REQ` q 
+                            LEFT JOIN UserDB.USER_USER_ALERT_CLIENT u on u.CLIENT_ID = q.CLIENT_ID	
+                            WHERE
+                                q.QRY_TYPE = 2 
+                                AND q.CLIENT_ID IN ( '43b54e65c06849afb33ee00fb7ba87ac', '893afe5a78be4fe28cc69d520e77f7d8' ) 
+                            GROUP BY
+                                q.CLIENT_ID'''
+    with connections['szcreditmysqldb'].cursor() as c:
+        c.execute(credit_report_stat_sql)
+        credit_report_sum = dictfetchall(c)
+        for clt in credit_report_sum:
+            credit_report_stat += '【{}】 查询企业公共信用报告【 {}】 次 。<br>'.format(clt['client_name'], clt['qry_times'])
+    result += credit_report_stat
     return HttpResponse(result)
 
 
@@ -154,10 +173,8 @@ def send_feishu(msg):
              "text":  msg
          }
     }
-
     headers = {
         'Content-Type': "application/json"
     }
-
     response = requests.request("POST", url, headers= headers, data=json.dumps(playload_message))
     print(response.text)

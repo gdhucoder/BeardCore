@@ -1,6 +1,11 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using BeardCore.Commons.Repository;
 using BeardCore.Service.Service;
 using SqlSugar;
+
+IFreeSql freeSql = new FreeSql.FreeSqlBuilder()
+    .UseConnectionString(FreeSql.DataType.Dameng, @"Server=10.3.88.113;PORT=5239;User id=SYSDBA;PWD=123456789")
+    .Build();
 
 PersonService personService = new PersonService();
 var hgd = new Person()
@@ -33,16 +38,31 @@ foreach (var p in ps)
     Console.WriteLine(p.name);
 }
 
-personService.Update(new Person() { personId = 19, name = "胡国栋2", sex = "F"});
+// personService.Update(new Person() { personId = 19, name = "胡国栋2", sex = "F"});
 
-var modifiedPerson = personService.GetById(19);
+// var modifiedPerson = personService.GetById(19);
 
-Console.WriteLine(modifiedPerson.name);
-var delRes = personService.DeleteById(19);
-Console.WriteLine("是否删除成功？ {0}", delRes);
+// Console.WriteLine(modifiedPerson.name);
+// var delRes = personService.DeleteById(19);
+// Console.WriteLine("是否删除成功？ {0}", delRes);
 
 Console.WriteLine("total: {0}", total);
 
+// var entService = new Repository<BizBaseInfo>();
+// var ents = entService.AsQueryable().ToList();
+
+
 Console.WriteLine("执行完成");
+
+Console.WriteLine("执行DM FreeSQL=======================");
+
+var ents = freeSql.Select<BizBaseInfo>().ToList();
+
+foreach (var e in ents)
+{
+    Console.WriteLine("{0}-{1}", e.ID, e.Mc);
+}
+
+Console.WriteLine("执行DM FreeSQL=======================");
 Console.ReadKey();
 

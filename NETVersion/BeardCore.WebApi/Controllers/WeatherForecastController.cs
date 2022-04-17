@@ -3,6 +3,8 @@
 using BeardCore.Commons.Log;
 using BeardCore.Mail;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using BeardCore.Commons.Extensions.Cache;
 
 namespace BeardCore.WebApi.Controllers
 {
@@ -19,9 +21,12 @@ namespace BeardCore.WebApi.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly IMemoryCache _memoryCache;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IMemoryCache memoryCache)
         {
             _logger = logger;
+            _memoryCache = memoryCache;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -57,6 +62,20 @@ namespace BeardCore.WebApi.Controllers
            var res  = await MailHelper.Send();
             Console.WriteLine("hello");
            return Ok(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MemoryCache()
+        {
+            
+            var time =  _memoryCache.GetRecord<string>("time");
+            if (time == null)
+            {
+                time = "缓存xxx";
+                _memoryCache.SetRecord<string>("time", time, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(3));
+            }
+
+            return Ok(time);
         }
     }
 }

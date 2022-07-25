@@ -5,6 +5,7 @@ using BeardCore.Mail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using BeardCore.Commons.Extensions.Cache;
+using OfficeOpenXml;
 
 namespace BeardCore.WebApi.Controllers
 {
@@ -76,6 +77,19 @@ namespace BeardCore.WebApi.Controllers
             }
 
             return Ok(time);
+        }
+
+        public IActionResult GetExcel()
+        {
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Test");
+                worksheet.Cells["A1"].Value = "胡国栋";
+                var excelData = package.GetAsByteArray();
+                var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                var fileName = "MyWorkbook.xlsx";
+                return File(excelData, contentType, fileName);
+            }
         }
     }
 }

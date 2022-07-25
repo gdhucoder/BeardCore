@@ -31,9 +31,13 @@ def weekly_summary():
         inverval = dictfetchall(c)[0]
         first_line = '周统计：<br>统计区间：{0}-{1}'.format(inverval['begin'], inverval['end'])+'<br>'
         c.execute(
-            '''select count(1) as total_times from EnterpriseInfoAlterDB.ENTERPRISE_INFO_QRY_REQ WHERE CREATE_DATE > STR_TO_DATE('2021-01-01','%Y-%m-%d')''')
+            '''select count(1) as total_times from EnterpriseInfoAlterDB.ENTERPRISE_INFO_QRY_REQ WHERE CREATE_DATE > STR_TO_DATE('2021-12-31','%Y-%m-%d')''')
         summary = dictfetchall(c)
         print(summary)
+        c.execute(
+            '''select count(1) as total_times from EnterpriseInfoAlterDB.ENTERPRISE_INFO_QRY_REQ WHERE CREATE_DATE > STR_TO_DATE('2021-01-01','%Y-%m-%d')''')
+        last_year = dictfetchall(c)
+        result += '，投产至今累计' + str(last_year[0]['total_times']) + '次'
         result += '，今年累计'+str(summary[0]['total_times'])+'次，其中'
         c.execute('''SELECT
                     q.CLIENT_ID 'clientID',
@@ -62,7 +66,7 @@ def weekly_summary():
 
 def monthly_summary():
 
-    template = '''月度统计：<br>新版数据接口月度统计（{0}月），统计区间：1日--{2}日<br>{0}月新版数据接口产品为各合作机构服务{3}次，今年累计{4}次，其中'''
+    template = '''月度统计：<br>新版数据接口月度统计（{0}月），统计区间：1日--{2}日<br>{0}月新版数据接口产品为各合作机构服务{3}次，投产至今{4}次，今年累计{5}次，其中'''
     month_date_sql = '''
                 SELECT
                 DATE_FORMAT(DATE_ADD( curdate(), INTERVAL - DAY ( curdate() ) + 1 DAY ), '%d') AS 'month_first_day',
@@ -71,8 +75,11 @@ def monthly_summary():
                 DATE_FORMAT(curdate(),'%m') as 'cur_month'
                 '''
     yearly_sum_sql = '''
-                select count(1) as 'total_times' from EnterpriseInfoAlterDB.ENTERPRISE_INFO_QRY_REQ WHERE CREATE_DATE > STR_TO_DATE('2021-01-01','%Y-%m-%d')
+                select count(1) as 'total_times' from EnterpriseInfoAlterDB.ENTERPRISE_INFO_QRY_REQ WHERE CREATE_DATE > STR_TO_DATE('2021-12-31','%Y-%m-%d')
                 '''
+    total_sum_sql = '''
+                    select count(1) as 'total_times' from EnterpriseInfoAlterDB.ENTERPRISE_INFO_QRY_REQ WHERE CREATE_DATE > STR_TO_DATE('2021-12-31','%Y-%m-%d')
+                    '''
     month_stat_sql = '''
                     SELECT
                     q.CLIENT_ID 'clientID',
@@ -97,6 +104,8 @@ def monthly_summary():
         cur_month = month_date['cur_month']
 
         c.execute(yearly_sum_sql)
+        this_year_total_times = dictfetchall(c)[0]['total_times']
+        c.execute(total_sum_sql)
         total_times = dictfetchall(c)[0]['total_times']
 
         c.execute(month_stat_sql)
@@ -106,14 +115,14 @@ def monthly_summary():
             template += clt['clientNameCn'] + str(clt['qryTime']) + "次，"
             month_total_times += clt['qryTime']
         template = template[:-1] + "。"
-        template = template.format(cur_month, month_first_day, month_cur_day, month_total_times, total_times)
+        template = template.format(cur_month, month_first_day, month_cur_day, month_total_times, total_times, this_year_total_times)
     feishu_txt = re.sub(r'(<br>)+', '\n', template)
     print(feishu_txt)
     send_feishu(feishu_txt)
     return template
 
 def sub_statics(request):
-    result = '预警服务银行机构订阅情况：<br>'
+    result = '上线至今，预警服务银行机构订阅情况：<br>'
     # 银行订阅企业情况
     sub_stat_sql = '''SELECT
             u.CLIENT_NAME AS 'client_name',

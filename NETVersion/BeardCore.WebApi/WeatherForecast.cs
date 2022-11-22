@@ -1,3 +1,5 @@
+﻿// Copyright (c) HuGuodong 2022. All Rights Reserved.
+
 namespace BeardCore.WebApi
 {
     public class WeatherForecast
